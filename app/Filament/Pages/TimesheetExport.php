@@ -12,6 +12,10 @@ use Filament\Pages\Page;
 use Filament\Forms\Components\DatePicker;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Models\Project;
+use Filament\Forms\Components\Select;
+use App\Models\User;
+
 
 class TimesheetExport extends Page implements HasForms
 {
@@ -40,6 +44,16 @@ class TimesheetExport extends Page implements HasForms
                 Grid::make()
                     ->columns(2)
                     ->schema([
+                        Select::make('user')
+                            ->label(__('User'))
+                            ->required()
+                            ->columnSpan(2)
+                            ->searchable()
+                            ->reactive()
+                            ->placeholder(__('Selecione um usuário')) 
+                            ->helperText(__("Selecione o usuário"))
+                            ->options(fn() => User::all()
+                                ->pluck('name', 'id')->toArray()),
                         DatePicker::make('start_date')
                             ->required()
                             ->reactive()

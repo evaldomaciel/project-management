@@ -40,7 +40,7 @@ class TimesheetExport implements FromCollection, WithHeadings
     {
         $collection = collect();
 
-        $hours = TicketHour::where('user_id', auth()->user()->id)
+        $hours = TicketHour::where('user_id', $this->params['user'])
             ->whereBetween('created_at', [$this->params['start_date'], $this->params['end_date']])
             ->get();
 

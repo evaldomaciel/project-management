@@ -33,6 +33,11 @@ class ProjectResource extends Resource
         return __('Projects');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Project'); 
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

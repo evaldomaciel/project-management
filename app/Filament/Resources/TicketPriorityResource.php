@@ -27,6 +27,11 @@ class TicketPriorityResource extends Resource
         return __('Ticket priorities');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Ticket priority');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

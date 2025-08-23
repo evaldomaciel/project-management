@@ -24,6 +24,11 @@ class ActivityResource extends Resource
         return __('Activities');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Activity');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

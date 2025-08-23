@@ -26,6 +26,11 @@ class TicketTypeResource extends Resource
         return __('Ticket types');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Ticket type');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

@@ -24,6 +24,11 @@ class TicketStatusResource extends Resource
         return __('Ticket statuses');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Ticket status');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

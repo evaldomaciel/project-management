@@ -26,6 +26,11 @@ class UserResource extends Resource
         return __('Users');
     }
 
+        public static function getModelLabel(): string
+    {
+        return __('User'); 
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

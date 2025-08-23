@@ -24,6 +24,11 @@ class PermissionResource extends Resource
         return __('Permissions');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Permission');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();

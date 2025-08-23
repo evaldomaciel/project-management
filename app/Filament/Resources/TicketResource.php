@@ -34,6 +34,11 @@ class TicketResource extends Resource
         return __('Tickets');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('Ticket');
+    }
+
     public static function getPluralLabel(): ?string
     {
         return static::getNavigationLabel();
@@ -76,10 +81,11 @@ class TicketResource extends Resource
                                             );
                                         }
                                     })
-                                    ->options(fn() => Project::where('owner_id', auth()->user()->id)
-                                        ->orWhereHas('users', function ($query) {
-                                            return $query->where('users.id', auth()->user()->id);
-                                        })->pluck('name', 'id')->toArray()
+                                    ->options(
+                                        fn() => Project::where('owner_id', auth()->user()->id)
+                                            ->orWhereHas('users', function ($query) {
+                                                return $query->where('users.id', auth()->user()->id);
+                                            })->pluck('name', 'id')->toArray()
                                     )
                                     ->default(fn() => request()->get('project'))
                                     ->required(),

@@ -8,8 +8,10 @@ use App\Models\TicketHour;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-class TimesheetExport implements FromCollection, WithHeadings
+
+class TimesheetExport implements FromCollection, WithHeadings, WithCustomCsvSettings
 {
     protected array $params;
 
@@ -59,5 +61,15 @@ class TimesheetExport implements FromCollection, WithHeadings
         }
 
         return $collection;
+    }
+
+    public function getCsvSettings(): array
+    {
+        return [
+            'input_encoding' => 'UTF-8',
+            'output_encoding' => 'UTF-8',
+            'use_bom' => true, 
+            'delimiter' => ';', 
+        ];
     }
 }

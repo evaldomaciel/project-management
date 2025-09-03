@@ -60,7 +60,7 @@ class TimesheetExport extends Page implements HasForms
                             ->columnSpan(2)
                             ->searchable()
                             ->reactive()
-                            ->placeholder(__('Selecione um usuário')) 
+                            ->placeholder(__('Selecione um usuário'))
                             ->helperText(__("Selecione o usuário"))
                             ->options(fn() => User::all()
                                 ->pluck('name', 'id')->toArray()),
@@ -83,7 +83,7 @@ class TimesheetExport extends Page implements HasForms
 
         return Excel::download(
             new \App\Exports\TimesheetExport($data),
-            'time_' . time() . '.csv',
+            'time_' . $this->user . '_' . time() . '.csv',
             \Maatwebsite\Excel\Excel::CSV,
             ['Content-Type' => 'text/csv']
         );

@@ -40,6 +40,9 @@ class LatestActivities extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        if (auth()->user()->hasRole('Administrator')) {
+            return TicketActivity::query()->limit(5)->latest();
+        }
         return TicketActivity::query()
             ->limit(5)
             ->whereHas('ticket', function ($query) {

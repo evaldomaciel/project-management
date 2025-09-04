@@ -29,6 +29,9 @@ class LatestTickets extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Ticket::query()->limit(5)->latest();
+        }
         return Ticket::query()
             ->limit(5)
             ->where(function ($query) {

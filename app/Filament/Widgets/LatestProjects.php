@@ -34,6 +34,9 @@ class LatestProjects extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Project::query()->limit(5)->latest();
+        }
         return Project::query()
             ->limit(5)
             ->where(function ($query) {

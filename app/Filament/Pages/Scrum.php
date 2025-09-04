@@ -37,6 +37,8 @@ class Scrum extends Page implements HasForms
             $this->project->owner_id != auth()->user()->id
             &&
             !$this->project->users->where('id', auth()->user()->id)->count()
+            &&
+            !auth()->user()->hasRole('Administrator')
         ) {
             abort(403);
         }

@@ -123,6 +123,9 @@ class RoadMap extends Page implements HasForms
 
     private function projectQuery(): Builder
     {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Project::query();
+        }
         return Project::where(function ($query) {
             return $query->where('owner_id', auth()->user()->id)
                 ->orWhereHas('users', function ($query) {

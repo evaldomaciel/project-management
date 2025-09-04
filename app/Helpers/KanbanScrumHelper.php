@@ -127,16 +127,18 @@ trait KanbanScrumHelper
         if ($this->includeNotAffectedTickets) {
             $query->whereNull('responsible_id');
         }
-        $query->where(function ($query) {
-            return $query->where('owner_id', auth()->user()->id)
-                ->orWhere('responsible_id', auth()->user()->id)
-                ->orWhereHas('project', function ($query) {
-                    return $query->where('owner_id', auth()->user()->id)
-                        ->orWhereHas('users', function ($query) {
-                            return $query->where('users.id', auth()->user()->id);
-                        });
-                });
-        });
+        if (!auth()->user()->hasRole('Administrator')) {
+            $query->where(function ($query) {
+                return $query->where('owner_id', auth()->user()->id)
+                    ->orWhere('responsible_id', auth()->user()->id)
+                    ->orWhereHas('project', function ($query) {
+                        return $query->where('owner_id', auth()->user()->id)
+                            ->orWhereHas('users', function ($query) {
+                                return $query->where('users.id', auth()->user()->id);
+                            });
+                    });
+            });
+        }
         return $query->get()
             ->map(fn(Ticket $item) => [
                 'id' => $item->id,

@@ -20,6 +20,9 @@ class ListProjects extends ListRecords
 
     protected function getTableQuery(): Builder
     {
+        if (auth()->user()->hasRole('Administrator')) {
+            return parent::getTableQuery();
+        }
         return parent::getTableQuery()
             ->where(function ($query) {
                 return $query->where('owner_id', auth()->user()->id)

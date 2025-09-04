@@ -82,10 +82,12 @@ class TicketResource extends Resource
                                         }
                                     })
                                     ->options(
-                                        fn() => Project::where('owner_id', auth()->user()->id)
-                                            ->orWhereHas('users', function ($query) {
-                                                return $query->where('users.id', auth()->user()->id);
-                                            })->pluck('name', 'id')->toArray()
+                                        fn() => auth()->user()->hasRole('Administrator')
+                                            ? Project::pluck('name', 'id')->toArray()
+                                            : Project::where('owner_id', auth()->user()->id)
+                                                ->orWhereHas('users', function ($query) {
+                                                    return $query->where('users.id', auth()->user()->id);
+                                                })->pluck('name', 'id')->toArray()
                                     )
                                     ->default(fn() => request()->get('project'))
                                     ->required(),
@@ -316,10 +318,12 @@ class TicketResource extends Resource
                 Tables\Filters\SelectFilter::make('project_id')
                     ->label(__('Project'))
                     ->multiple()
-                    ->options(fn() => Project::where('owner_id', auth()->user()->id)
-                        ->orWhereHas('users', function ($query) {
-                            return $query->where('users.id', auth()->user()->id);
-                        })->pluck('name', 'id')->toArray()),
+                    ->options(fn() => auth()->user()->hasRole('Administrator')
+                        ? Project::pluck('name', 'id')->toArray()
+                        : Project::where('owner_id', auth()->user()->id)
+                            ->orWhereHas('users', function ($query) {
+                                return $query->where('users.id', auth()->user()->id);
+                            })->pluck('name', 'id')->toArray()),
 
                 Tables\Filters\SelectFilter::make('owner_id')
                     ->label(__('Owner'))

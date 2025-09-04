@@ -73,6 +73,12 @@ class PermissionsSeeder extends Seeder
         // Add all permissions to default role
         $role->syncPermissions(Permission::all()->pluck('name')->toArray());
 
+        // Create administrator role with all permissions
+        $adminRole = Role::firstOrCreate([
+            'name' => 'Administrator'
+        ]);
+        $adminRole->syncPermissions(Permission::all()->pluck('name')->toArray());
+
         // Assign default role to first database user
         if ($user = User::first()) {
             $user->syncRoles([$this->defaultRole]);

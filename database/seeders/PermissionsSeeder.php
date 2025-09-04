@@ -28,7 +28,8 @@ class PermissionsSeeder extends Seeder
 
     private array $extraPermissions = [
         'Manage general settings', 'Import from Jira',
-        'List timesheet data', 'View timesheet dashboard', 'View timesheet export'
+        'List timesheet data', 'View timesheet dashboard', 'View timesheet export',
+        'View agenda'
     ];
 
     private string $defaultRole = 'Default role';

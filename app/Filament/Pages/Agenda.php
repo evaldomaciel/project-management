@@ -125,6 +125,55 @@ class Agenda extends Page implements HasForms
 
         $sprints = $sprintQuery->get();
 
+        // Scrum: aggregate logged hours per user/day/sprint
+        $scrumHoursQuery = TicketHour::query()
+            ->with(['user.roles', 'ticket.sprint.project'])
+            ->whereBetween('created_at', [
+                $startOfMonth->copy()->startOfDay(),
+                $endOfMonth->copy()->endOfDay()
+            ])
+            ->whereHas('ticket', function ($query) {
+                $query->whereNotNull('sprint_id');
+            })
+            ->whereHas('ticket.sprint');
+
+        if (!auth()->user()->hasRole('Administrator')) {
+            $scrumHoursQuery->whereHas('ticket.project', function ($query) {
+                $query->where('owner_id', auth()->user()->id)
+                    ->orWhereHas('users', function ($query) {
+                        return $query->where('users.id', auth()->user()->id);
+                    });
+            });
+        }
+
+        $scrumHours = $scrumHoursQuery->get();
+        $allowedRoles = ['Desenvolvedor', 'Consultor'];
+        $scrumAggregate = [];
+        foreach ($scrumHours as $hour) {
+            $user = $hour->user;
+            $ticket = $hour->ticket;
+            $sprint = $ticket?->sprint;
+            if (!$user || !$ticket || !$sprint) {
+                continue;
+            }
+            if (!(method_exists($user, 'hasAnyRole') && $user->hasAnyRole($allowedRoles))) {
+                continue;
+            }
+            $dateKey = $hour->created_at->toDateString();
+            $userId = $user->id;
+            $sprintId = $sprint->id;
+            if (!isset($scrumAggregate[$userId])) {
+                $scrumAggregate[$userId] = [];
+            }
+            if (!isset($scrumAggregate[$userId][$dateKey])) {
+                $scrumAggregate[$userId][$dateKey] = [];
+            }
+            if (!isset($scrumAggregate[$userId][$dateKey][$sprintId])) {
+                $scrumAggregate[$userId][$dateKey][$sprintId] = 0.0;
+            }
+            $scrumAggregate[$userId][$dateKey][$sprintId] += (float) $hour->value;
+        }
+
         $userIdToUser = collect();
         $rows = [];
 
@@ -169,7 +218,9 @@ class Agenda extends Page implements HasForms
                 while ($cursor->lte($to)) {
                     $key = $cursor->format('Y-m-d');
                     if (isset($rows[$userId]['days'][$key])) {
-                        $rows[$userId]['days'][$key][] = $project->name . ' - ' . $sprint->name;
+                        $hours = (float) ($scrumAggregate[$userId][$key][$sprint->id] ?? 0);
+                        $label = $project->name . ' - ' . $sprint->name . ($hours > 0 ? (' - ' . $hours . 'h') : '');
+                        $rows[$userId]['days'][$key][] = $label;
                     }
                     $cursor->addDay();
                 }

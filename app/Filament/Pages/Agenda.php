@@ -128,7 +128,7 @@ class Agenda extends Page implements HasForms
         // Scrum: aggregate logged hours per user/day/sprint
         $scrumHoursQuery = TicketHour::query()
             ->with(['user.roles', 'ticket.sprint.project'])
-            ->whereBetween('created_at', [
+            ->whereBetween('execution_at', [
                 $startOfMonth->copy()->startOfDay(),
                 $endOfMonth->copy()->endOfDay()
             ])
@@ -159,7 +159,7 @@ class Agenda extends Page implements HasForms
             if (!(method_exists($user, 'hasAnyRole') && $user->hasAnyRole($allowedRoles))) {
                 continue;
             }
-            $dateKey = $hour->created_at->toDateString();
+            $dateKey = ($hour->execution_at ?? $hour->created_at)->toDateString();
             $userId = $user->id;
             $sprintId = $sprint->id;
             if (!isset($scrumAggregate[$userId])) {
@@ -235,7 +235,7 @@ class Agenda extends Page implements HasForms
         // Kanban: add time logs by day and ticket
         $kanbanHoursQuery = TicketHour::query()
             ->with(['user.roles', 'ticket.project'])
-            ->whereBetween('created_at', [
+            ->whereBetween('execution_at', [
                 $startOfMonth->copy()->startOfDay(),
                 $endOfMonth->copy()->endOfDay()
             ])
@@ -268,7 +268,7 @@ class Agenda extends Page implements HasForms
                 continue;
             }
 
-            $dateKey = $hour->created_at->toDateString();
+            $dateKey = ($hour->execution_at ?? $hour->created_at)->toDateString();
             $userId = $user->id;
             $ticketId = $ticket->id;
             $activityId = $hour->activity_id ?? 0;

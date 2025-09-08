@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Project;
 use App\Models\Sprint;
+use App\Models\TicketHour;
 use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms\Components\Card;
@@ -173,6 +174,87 @@ class Agenda extends Page implements HasForms
                     $cursor->addDay();
                 }
                 $userIdToUser->put($userId, $user);
+            }
+        }
+
+        // Kanban: add time logs by day and ticket
+        $kanbanHoursQuery = TicketHour::query()
+            ->with(['user.roles', 'ticket.project'])
+            ->whereBetween('created_at', [
+                $startOfMonth->copy()->startOfDay(),
+                $endOfMonth->copy()->endOfDay()
+            ])
+            ->whereHas('ticket.project', function ($query) {
+                $query->where('type', 'kanban');
+            });
+
+        if (!auth()->user()->hasRole('Administrator')) {
+            $kanbanHoursQuery->whereHas('ticket.project', function ($query) {
+                $query->where('owner_id', auth()->user()->id)
+                    ->orWhereHas('users', function ($query) {
+                        return $query->where('users.id', auth()->user()->id);
+                    });
+            });
+        }
+
+        $kanbanHours = $kanbanHoursQuery->get();
+
+        // Aggregate hours per user/day/ticket with distinct activity buckets
+        $allowedRoles = ['Desenvolvedor', 'Consultor'];
+        $aggregate = [];
+        foreach ($kanbanHours as $hour) {
+            $user = $hour->user;
+            $ticket = $hour->ticket;
+            $project = $ticket?->project;
+            if (!$user || !$ticket || !$project) {
+                continue;
+            }
+            if (!(method_exists($user, 'hasAnyRole') && $user->hasAnyRole($allowedRoles))) {
+                continue;
+            }
+
+            $dateKey = $hour->created_at->toDateString();
+            $userId = $user->id;
+            $ticketId = $ticket->id;
+            $activityId = $hour->activity_id ?? 0;
+
+            if (!isset($aggregate[$userId])) {
+                $aggregate[$userId] = [];
+            }
+            if (!isset($aggregate[$userId][$dateKey])) {
+                $aggregate[$userId][$dateKey] = [];
+            }
+            if (!isset($aggregate[$userId][$dateKey][$ticketId])) {
+                $aggregate[$userId][$dateKey][$ticketId] = [
+                    'project' => $project->name,
+                    'ticket' => $ticket->name,
+                    'activities' => [],
+                ];
+            }
+            if (!isset($aggregate[$userId][$dateKey][$ticketId]['activities'][$activityId])) {
+                $aggregate[$userId][$dateKey][$ticketId]['activities'][$activityId] = 0.0;
+            }
+            $aggregate[$userId][$dateKey][$ticketId]['activities'][$activityId] += (float) $hour->value;
+        }
+
+        // Fill rows with kanban aggregated labels
+        foreach ($aggregate as $userId => $dates) {
+            $user = $kanbanHours->firstWhere('user.id', $userId)?->user;
+            if (!isset($rows[$userId])) {
+                $rows[$userId] = [
+                    'user'   => $user,
+                    'name'   => (string)($user?->name ?? ''),
+                    'days'   => array_fill_keys(array_keys($this->days), []),
+                ];
+            }
+            foreach ($dates as $dateKey => $tickets) {
+                foreach ($tickets as $ticketId => $data) {
+                    $total = array_sum($data['activities']);
+                    $label = $data['project'] . ' - ' . $data['ticket'] . ' - ' . $total . 'h';
+                    if (isset($rows[$userId]['days'][$dateKey])) {
+                        $rows[$userId]['days'][$dateKey][] = $label;
+                    }
+                }
             }
         }
 

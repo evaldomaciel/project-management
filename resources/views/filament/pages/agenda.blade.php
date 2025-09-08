@@ -27,10 +27,16 @@
                                 <td class="px-2 py-2 align-top">
                                     @if(!empty($row['days'][$dateKey]))
                                         <div class="space-y-1">
-                                            @foreach($row['days'][$dateKey] as $label)
-                                            <div class="px-2 py-1 rounded flex items-center justify-center text-center text-xs text-white" style="background-color: #3b82f6;">
-                                                <div class="text-xs leading-4">{{ $label }}</div>
-                                            </div>
+                                            @foreach($row['days'][$dateKey] as $item)
+                                                @php
+                                                    $label = is_array($item) ? ($item['label'] ?? '') : (string) $item;
+                                                    $type = is_array($item) ? ($item['type'] ?? 'scrum') : 'scrum';
+                                                    $has = is_array($item) ? (bool) ($item['has_hours'] ?? false) : false;
+                                                    $bg = $has ? ($type === 'kanban' ? '#3e9300' : '#3b82f6') : '#9ca3af';
+                                                @endphp
+                                                <div class="px-2 py-1 rounded flex items-center justify-center text-center text-xs text-white" style="background-color: {{ $bg }};">
+                                                    <div class="text-xs leading-4">{{ $label }}</div>
+                                                </div>
                                             @endforeach
                                         </div>
                                     @endif

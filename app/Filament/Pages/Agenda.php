@@ -220,7 +220,11 @@ class Agenda extends Page implements HasForms
                     if (isset($rows[$userId]['days'][$key])) {
                         $hours = (float) ($scrumAggregate[$userId][$key][$sprint->id] ?? 0);
                         $label = $project->name . ' - ' . $sprint->name . ($hours > 0 ? (' - ' . $hours . 'h') : '');
-                        $rows[$userId]['days'][$key][] = $label;
+                        $rows[$userId]['days'][$key][] = [
+                            'label' => $label,
+                            'type' => 'scrum',
+                            'has_hours' => $hours > 0,
+                        ];
                     }
                     $cursor->addDay();
                 }
@@ -303,7 +307,11 @@ class Agenda extends Page implements HasForms
                     $total = array_sum($data['activities']);
                     $label = $data['project'] . ' - ' . $data['ticket'] . ' - ' . $total . 'h';
                     if (isset($rows[$userId]['days'][$dateKey])) {
-                        $rows[$userId]['days'][$dateKey][] = $label;
+                        $rows[$userId]['days'][$dateKey][] = [
+                            'label' => $label,
+                            'type' => 'kanban',
+                            'has_hours' => $total > 0,
+                        ];
                     }
                 }
             }

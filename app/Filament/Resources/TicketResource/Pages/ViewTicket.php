@@ -12,6 +12,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -108,6 +109,10 @@ class ViewTicket extends ViewRecord implements HasForms
                         ->options(function ($get, $set) {
                             return Activity::all()->pluck('name', 'id')->toArray();
                         }),
+                    DatePicker::make('execution_at')
+                        ->label(__('Execution date'))
+                        ->default(fn() => now()->toDateString())
+                        ->required(),
                     Textarea::make('comment')
                         ->label(__('Comment'))
                         ->rows(3),
@@ -120,7 +125,8 @@ class ViewTicket extends ViewRecord implements HasForms
                         'activity_id' => $data['activity_id'],
                         'user_id' => auth()->user()->id,
                         'value' => $value,
-                        'comment' => $comment
+                        'comment' => $comment,
+                        'execution_at' => $data['execution_at'] ? (now()->parse($data['execution_at'])->startOfDay()) : now(),
                     ]);
                     $this->record->refresh();
                     $this->notify('success', __('Time logged into ticket'));

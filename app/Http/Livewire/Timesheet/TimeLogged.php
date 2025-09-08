@@ -60,6 +60,11 @@ class TimeLogged extends Component implements HasTable
                 ->dateTime()
                 ->sortable()
                 ->searchable(),
+            Tables\Columns\TextColumn::make('execution_at')
+                ->label(__('Execution date'))
+                ->date()
+                ->sortable()
+                ->searchable(),
         ];
     }
 }

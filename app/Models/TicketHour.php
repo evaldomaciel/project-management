@@ -13,7 +13,11 @@ class TicketHour extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'ticket_id', 'value', 'comment', 'activity_id'
+        'user_id', 'ticket_id', 'value', 'comment', 'activity_id', 'execution_at'
+    ];
+
+    protected $casts = [
+        'execution_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

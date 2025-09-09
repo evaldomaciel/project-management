@@ -41,12 +41,15 @@ class TimesheetExport implements FromCollection, WithHeadings, WithCustomCsvSett
     public function collection(): Collection
     {
         $collection = collect();
+        $totalHours = 0;
 
         $hours = TicketHour::where('user_id', $this->params['user'])
-            ->whereBetween('created_at', [$this->params['start_date'], $this->params['end_date']])
+            ->whereBetween('execution_at', [$this->params['start_date'], $this->params['end_date']])
             ->get();
 
         foreach ($hours as $item) {
+            $totalHours += $item->value;
+
             $collection->push([
                 '#' => $item->ticket->code,
                 'project' => $item->ticket->project->name,
@@ -54,11 +57,23 @@ class TimesheetExport implements FromCollection, WithHeadings, WithCustomCsvSett
                 'details' => $item->comment,
                 'user' => $item->user->name,
                 'time' => $item->forHumans,
-                'hours' => number_format($item->value, 2, ',', ' '),
+                'hours' => $this->formatDecimalHoursToTime($item->value),
                 'activity' => $item->activity ? $item->activity->name : '-',
-                'date' => $item->created_at->format(__('Y-m-d g:i A')),
+                'date' => $item->execution_at->format(__('Y-m-d g:i A')),
             ]);
         }
+
+        $collection->push([
+            '#' => '',
+            'project' => '',
+            'ticket' => '',
+            'details' => '',
+            'user' => '',
+            'time' => 'TOTAL',
+            'hours' => $this->formatDecimalHoursToTime($totalHours),
+            'activity' => '',
+            'date' => '',
+        ]);
 
         return $collection;
     }
@@ -68,8 +83,16 @@ class TimesheetExport implements FromCollection, WithHeadings, WithCustomCsvSett
         return [
             'input_encoding' => 'UTF-8',
             'output_encoding' => 'UTF-8',
-            'use_bom' => true, 
-            'delimiter' => ';', 
+            'use_bom' => true,
+            'delimiter' => ';',
         ];
+    }
+
+    private function formatDecimalHoursToTime($decimalHours): string
+    {
+        $hours = floor($decimalHours);
+        $minutes = ($decimalHours - $hours) * 60;
+
+        return sprintf('%02d:%02d', $hours, $minutes);
     }
 }

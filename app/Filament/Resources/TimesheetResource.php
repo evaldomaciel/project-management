@@ -53,6 +53,7 @@ class TimesheetResource extends Resource
                             ->label(__('Activity'))
                             ->searchable()
                             ->reactive()
+                            ->required()
                             ->options(function ($get, $set) {
                                 return Activity::all()->pluck('name', 'id')->toArray();
                             }),
@@ -108,6 +109,13 @@ class TimesheetResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn (TicketHour $record): bool => 
+                        auth()->user()->can('delete', $record) || 
+                        $record->user_id === auth()->user()->id ||
+                        $record->ticket->owner_id === auth()->user()->id ||
+                        $record->ticket->responsible_id === auth()->user()->id
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

@@ -106,13 +106,16 @@ class ViewTicket extends ViewRecord implements HasForms
                         ->label(__('Activity'))
                         ->searchable()
                         ->reactive()
+                        ->required()
                         ->options(function ($get, $set) {
                             return Activity::all()->pluck('name', 'id')->toArray();
                         }),
                     DatePicker::make('execution_at')
                         ->label(__('Execution date'))
                         ->default(fn() => now()->toDateString())
-                        ->required(),
+                        ->required()
+                        ->displayFormat('d/m/Y')
+                        ->format('Y-m-d'),
                     Textarea::make('comment')
                         ->label(__('Comment'))
                         ->rows(3),

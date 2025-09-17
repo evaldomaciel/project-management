@@ -13,7 +13,15 @@
                     <tr>
                         <th class="px-3 py-2 text-left font-medium text-gray-700 sticky left-0 bg-white z-10">{{ __('User') }}</th>
                         @foreach($days as $dateKey => $day)
-                            <th class="px-3 py-2 text-center font-medium text-gray-700">{{ $day }}</th>
+                            @php
+                                $date = \Carbon\Carbon::parse($dateKey);
+                                $dayName = $date->locale('pt_BR')->isoFormat('ddd');
+                                $dayNumber = $date->format('d');
+                            @endphp
+                            <th class="px-3 py-2 text-center font-medium text-gray-700">
+                                <div class="text-xs text-gray-500">{{ $dayName }}</div>
+                                <div class="text-sm">{{ $dayNumber }}</div>
+                            </th>
                         @endforeach
                     </tr>
                 </thead>

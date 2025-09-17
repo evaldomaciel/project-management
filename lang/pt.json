@@ -322,5 +322,10 @@
     "The password reset token has expired. Please request a new one.": "O token de redefinição de senha expirou. Solicite um novo.",
     "Password reset link sent": "Link de redefinição de senha enviado",
     "We have sent a password reset link to your email address.": "Enviamos um link de redefinição de senha para seu endereço de e-mail.",
-    "Please check your email and follow the instructions to reset your password.": "Por favor, verifique seu e-mail e siga as instruções para redefinir sua senha."
+    "Please check your email and follow the instructions to reset your password.": "Por favor, verifique seu e-mail e siga as instruções para redefinir sua senha.",
+    "Olá!": "Olá!",
+    "Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta.": "Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta.",
+    "Este link de redefinição de senha expirará em :count minutos.": "Este link de redefinição de senha expirará em :count minutos.",
+    "Se você não solicitou uma redefinição de senha, nenhuma ação adicional é necessária.": "Se você não solicitou uma redefinição de senha, nenhuma ação adicional é necessária.",
+    "Atenciosamente,": "Atenciosamente,"
 }

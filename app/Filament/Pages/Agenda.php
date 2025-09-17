@@ -21,7 +21,7 @@ class Agenda extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon =  'heroicon-o-view-boards'; // 'heroicon-o-calendar-days';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
     protected static string $view = 'filament.pages.agenda';
 
@@ -340,7 +340,18 @@ class Agenda extends Page implements HasForms
     private function generateDays(Carbon $start, Carbon $end): array
     {
         $days = [];
-        $cursor = $start->copy();
+        
+        // Configurar Carbon para português do Brasil
+        Carbon::setLocale('pt_BR');
+        
+        // Começar a semana no domingo (0 = domingo, 1 = segunda)
+        $cursor = $start->copy()->startOfWeek(0); // 0 = domingo
+        
+        // Se o cursor está antes do início do mês, ajustar para o início do mês
+        if ($cursor->lt($start)) {
+            $cursor = $start->copy();
+        }
+        
         while ($cursor->lte($end)) {
             $days[$cursor->format('Y-m-d')] = $cursor->format('d');
             $cursor->addDay();

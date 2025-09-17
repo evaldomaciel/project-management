@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Timesheet;
 
 use App\Models\Ticket;
+use App\Models\TicketHour;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -65,6 +68,35 @@ class TimeLogged extends Component implements HasTable
                 ->date()
                 ->sortable()
                 ->searchable(),
+        ];
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+            Tables\Actions\Action::make('delete')
+                ->label(__('Delete'))
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading(__('Delete time record'))
+                ->modalSubheading(__('Are you sure you want to delete this time record? This action cannot be undone.'))
+                ->modalButton(__('Delete'))
+                ->visible(fn (TicketHour $record): bool => 
+                    auth()->user()->can('delete', $record) || 
+                    $record->user_id === auth()->user()->id ||
+                    $this->ticket->owner_id === auth()->user()->id ||
+                    $this->ticket->responsible_id === auth()->user()->id
+                )
+                ->action(function (TicketHour $record): void {
+                    $record->delete();
+                    
+                    Notification::make()
+                        ->success()
+                        ->title(__('Time record deleted'))
+                        ->body(__('The time record has been successfully deleted.'))
+                        ->send();
+                }),
         ];
     }
 }

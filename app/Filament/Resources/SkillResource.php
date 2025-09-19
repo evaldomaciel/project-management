@@ -20,7 +20,7 @@ class SkillResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 23;
 
     protected static function getNavigationGroup(): ?string
     {

@@ -327,5 +327,22 @@
     "Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta.": "Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta.",
     "Este link de redefinição de senha expirará em :count minutos.": "Este link de redefinição de senha expirará em :count minutos.",
     "Se você não solicitou uma redefinição de senha, nenhuma ação adicional é necessária.": "Se você não solicitou uma redefinição de senha, nenhuma ação adicional é necessária.",
-    "Atenciosamente,": "Atenciosamente,"
+    "Atenciosamente,": "Atenciosamente,",
+    "Skills": "Habilidades",
+    "Skill": "Habilidade",
+    "Color": "Cor",
+    "Active": "Ativo",
+    "Users Count": "Número de Usuários",
+    "Cannot delete skill": "Não é possível excluir habilidade",
+    "This skill cannot be deleted because it is assigned to one or more users.": "Esta habilidade não pode ser excluída porque está atribuída a um ou mais usuários.",
+    "Cannot delete some skills": "Não é possível excluir algumas habilidades",
+    "Some skills cannot be deleted because they are assigned to users.": "Algumas habilidades não podem ser excluídas porque estão atribuídas a usuários.",
+    "Delete Skill": "Excluir Habilidade",
+    "Are you sure you want to delete this skill? This action cannot be undone.": "Tem certeza de que deseja excluir esta habilidade? Esta ação não pode ser desfeita.",
+    "Yes, delete it": "Sim, excluir",
+    "Active only": "Apenas ativos",
+    "Inactive only": "Apenas inativos",
+    "Will be auto-generated from name if left empty": "Será gerado automaticamente a partir do nome se deixado vazio",
+    "Description": "Descrição",
+    "Slug": "Slug"
 }

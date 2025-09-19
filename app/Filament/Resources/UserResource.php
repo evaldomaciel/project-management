@@ -66,11 +66,17 @@ class UserResource extends Resource
                                     )
                                     ->maxLength(255),
 
-                                Forms\Components\CheckboxList::make('roles')
-                                    ->label(__('Permission roles'))
-                                    ->required()
-                                    ->columns(3)
-                                    ->relationship('roles', 'name'),
+                Forms\Components\CheckboxList::make('roles')
+                    ->label(__('Permission roles'))
+                    ->required()
+                    ->columns(3)
+                    ->relationship('roles', 'name'),
+
+                Forms\Components\CheckboxList::make('skills')
+                    ->label(__('Skills'))
+                    ->columns(3)
+                    ->relationship('skills', 'name')
+                    ->options(\App\Models\Skill::active()->pluck('name', 'id')),
                             ]),
                     ])
             ]);
@@ -94,21 +100,13 @@ class UserResource extends Resource
                     ->label(__('Roles'))
                     ->limit(2),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->label(__('Email verified at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('socials')
-                    ->label(__('Linked social networks'))
-                    ->view('partials.filament.resources.social-icon'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('Created at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\TagsColumn::make('skills.name')
+                    ->label(__('Skills'))
+                    ->limit(3)
+                    ->separator(',')
+                    ->getStateUsing(function ($record) {
+                        return $record->skills->pluck('name')->toArray();
+                    }),
             ])
             ->filters([
                 //

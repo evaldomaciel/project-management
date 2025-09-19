@@ -20,7 +20,7 @@ class TicketPriorityResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-badge-check';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 15;
 
     protected static function getNavigationLabel(): string
     {

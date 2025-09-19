@@ -27,7 +27,7 @@ class Agenda extends Page implements HasForms
 
     protected static ?string $slug = 'agenda';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 5;
 
     protected static function getNavigationLabel(): string
     {

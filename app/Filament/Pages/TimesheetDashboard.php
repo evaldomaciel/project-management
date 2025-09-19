@@ -11,7 +11,7 @@ class TimesheetDashboard extends Page
 {
     protected static ?string $slug = 'timesheet-dashboard';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 31;
 
     protected static string $view = 'filament::pages.dashboard';
 

@@ -18,7 +18,7 @@ class RoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-lock-open';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 24;
 
     protected static function getNavigationLabel(): string
     {

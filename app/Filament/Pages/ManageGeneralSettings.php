@@ -19,6 +19,8 @@ class ManageGeneralSettings extends SettingsPage
 {
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
+    protected static ?int $navigationSort = 41;
+
     protected static string $settings = GeneralSettings::class;
 
     protected static function shouldRegisterNavigation(): bool
@@ -34,11 +36,6 @@ class ManageGeneralSettings extends SettingsPage
     protected static function getNavigationLabel(): string
     {
         return __('General');
-    }
-
-    protected static function getNavigationGroup(): ?string
-    {
-        return __('Settings');
     }
 
     protected function getFormSchema(): array

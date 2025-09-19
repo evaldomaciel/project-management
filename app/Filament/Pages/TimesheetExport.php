@@ -23,7 +23,7 @@ class TimesheetExport extends Page implements HasForms
 
     protected static ?string $slug = 'timesheet-export';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 33;
 
     protected static string $view = 'filament.pages.timesheet-export';
 

@@ -113,6 +113,13 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return $this->hasMany(TicketHour::class, 'user_id', 'id');
     }
 
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'user_skills')
+                    ->withPivot('proficiency_level')
+                    ->withTimestamps();
+    }
+
     public function totalLoggedInHours(): Attribute
     {
         return new Attribute(

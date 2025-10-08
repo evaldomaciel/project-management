@@ -194,7 +194,17 @@ class TicketResource extends Resource
                                 Forms\Components\TextInput::make('estimation')
                                     ->label(__('Estimation time'))
                                     ->numeric()
-                                    ->columnSpan(2),
+                                            ->columnSpan(2),
+
+                                        Forms\Components\DatePicker::make('starts_at')
+                                            ->label(__('Start date'))
+                                            ->displayFormat('Y-m-d')
+                                            ->columnSpan(2),
+
+                                        Forms\Components\DatePicker::make('ends_at')
+                                            ->label(__('End date'))
+                                            ->displayFormat('Y-m-d')
+                                            ->columnSpan(2),
                             ]),
 
                         Forms\Components\Repeater::make('relations')

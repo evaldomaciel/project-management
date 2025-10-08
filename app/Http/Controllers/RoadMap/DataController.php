@@ -104,11 +104,18 @@ class DataController extends Controller
     private function ticketObj(Epic|null $epic, Ticket $ticket)
     {
         $pComp = round($ticket->completudePercentage, 0);
+        $start = $ticket->starts_at?->format('Y-m-d')
+            ?? $ticket->sprint?->starts_at?->format('Y-m-d')
+            ?? '';
+        $endDateYmd = $ticket->ends_at?->format('Y-m-d')
+            ?? $ticket->sprint?->ends_at?->format('Y-m-d')
+            ?? null;
+        $end = $endDateYmd ? ($endDateYmd . ' 23:59:59') : '';
         return [
             "pID" => ($epic?->id ?? "N") . $ticket->id,
             "pName" => $ticket->name,
-            "pStart" => "",
-            "pEnd" => "",
+            "pStart" => $start,
+            "pEnd" => $end,
             "pClass" => "g-custom-task",
             "pLink" => "",
             "pMile" => 0,

@@ -5,6 +5,7 @@
     "Account verified": "Conta verificada",
     "Activities": "Atividades",
     "Activity": "Atividade",
+    "Add comment": "Adicionar comentário",
     "Affected users": "Usuários afetados",
     "create": "criar",
     "Create": "Criar",
@@ -190,7 +191,9 @@
     "You subscribed to the ticket": "Você assinou o ticket",
     "You unsubscribed from the ticket": "Você cancelou a assinatura do ticket",
     "Manage general settings": "Gerenciar configurações gerais",
-    "Save": "Salvar",
+    "Relation": "Relação",
+    "Relations": "Relações",
+    "relations": "relações",
     "Contributors": "Contribuintes",
     "Contributor": "Contribuinte",
     "Road Map": "Roteiro",
@@ -344,5 +347,7 @@
     "Inactive only": "Apenas inativos",
     "Will be auto-generated from name if left empty": "Será gerado automaticamente a partir do nome se deixado vazio",
     "Description": "Descrição",
+    "Start date": "Data de início",
+    "End date": "Data de término",
     "Slug": "Slug"
 }

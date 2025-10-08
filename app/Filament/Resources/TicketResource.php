@@ -208,6 +208,7 @@ class TicketResource extends Resource
                             ]),
 
                         Forms\Components\Repeater::make('relations')
+                            ->label(__('Relations'))
                             ->itemLabel(function (array $state) {
                                 $ticketRelation = TicketRelation::find($state['id'] ?? 0);
                                 if ($ticketRelation) {
@@ -231,7 +232,11 @@ class TicketResource extends Resource
                                             ->label(__('Relation type'))
                                             ->required()
                                             ->searchable()
-                                            ->options(config('system.tickets.relations.list'))
+                                            ->options(function () {
+                                                return collect(config('system.tickets.relations.list'))
+                                                    ->map(fn($label) => __($label))
+                                                    ->toArray();
+                                            })
                                             ->default(fn() => config('system.tickets.relations.default')),
 
                                         Forms\Components\Select::make('relation_id')

@@ -147,7 +147,8 @@ class Agenda extends Page implements HasForms
         }
 
         $scrumHours = $scrumHoursQuery->get();
-        $allowedRoles = ['Desenvolvedor', 'Consultor'];
+        // Get roles that should appear in agenda
+        $allowedRoles = \App\Models\Role::where('must_have_agenda', true)->pluck('name')->toArray();
         $scrumAggregate = [];
         foreach ($scrumHours as $hour) {
             $user = $hour->user;
@@ -192,8 +193,8 @@ class Agenda extends Page implements HasForms
             }
             $contributors = $contributors->unique('id');
 
-            // Only keep users with roles "Desenvolvedor" or "Consultor"
-            $allowedRoles = ['Desenvolvedor', 'Consultor'];
+            // Only keep users with roles that have must_have_agenda = true
+            $allowedRoles = \App\Models\Role::where('must_have_agenda', true)->pluck('name')->toArray();
             $contributors = $contributors->filter(function ($user) use ($allowedRoles) {
                 return $user && method_exists($user, 'hasAnyRole') && $user->hasAnyRole($allowedRoles);
             });
@@ -255,7 +256,7 @@ class Agenda extends Page implements HasForms
         $kanbanHours = $kanbanHoursQuery->get();
 
         // Aggregate hours per user/day/ticket with distinct activity buckets
-        $allowedRoles = ['Desenvolvedor', 'Consultor'];
+        $allowedRoles = \App\Models\Role::where('must_have_agenda', true)->pluck('name')->toArray();
         $aggregate = [];
         foreach ($kanbanHours as $hour) {
             $user = $hour->user;

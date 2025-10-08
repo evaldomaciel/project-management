@@ -55,6 +55,11 @@ class RoleResource extends Resource
                                     ->maxLength(255)
                                     ->required(),
 
+                                Forms\Components\Toggle::make('must_have_agenda')
+                                    ->label(__('Must have agenda'))
+                                    ->helperText(__('Users with this role will appear in the agenda'))
+                                    ->default(false),
+
                                 Forms\Components\CheckboxList::make('permissions')
                                     ->label(__('Permissions'))
                                     ->required()

@@ -351,5 +351,7 @@
     "Description": "Descrição",
     "Start date": "Data de início",
     "End date": "Data de término",
-    "Slug": "Slug"
+    "Slug": "Slug",
+    "Must have agenda": "Deve ter agenda",
+    "Users with this role will appear in the agenda": "Usuários com este papel aparecerão na agenda"
 }

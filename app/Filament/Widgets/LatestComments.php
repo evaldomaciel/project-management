@@ -63,18 +63,22 @@ class LatestComments extends BaseWidget
             Tables\Columns\TextColumn::make('ticket')
                 ->label(__('Ticket'))
                 ->formatStateUsing(function ($state) {
+                    $projectName = $state->project?->name ?? '';
+                    $ticketCode = $state->code ?? '';
+                    $ticketName = $state->name ?? '';
+                    $ticketUrl  = $ticketCode ? route('filament.resources.tickets.share', $ticketCode) : '#';
+
                     return new HtmlString('
                     <div class="flex flex-col gap-1">
-                        <span class="text-gray-400 font-medium text-xs">
-                            ' . $state->project->name . '
+                        <span class="text-gray-400 font-medium text-xs">'
+                        . e($projectName) . '
                         </span>
                         <span>
-                            <a href="' . route('filament.resources.tickets.share', $state->code)
-                        . '" target="_blank" class="text-primary-500 text-sm hover:underline">'
-                        . $state->code
-                        . '</a>
+                            <a href="' . e($ticketUrl) . '" target="_blank" class="text-primary-500 text-sm hover:underline">'
+                        . e($ticketCode) .
+                        '</a>
                             <span class="text-sm text-gray-400">|</span> '
-                        . $state->name . '
+                        . e($ticketName) . '
                         </span>
                     </div>
                 ');
@@ -82,11 +86,16 @@ class LatestComments extends BaseWidget
 
             Tables\Columns\TextColumn::make('user.name')
                 ->label(__('Owner'))
-                ->formatStateUsing(fn($record) => view('components.user-avatar', ['user' => $record->user])),
+                ->formatStateUsing(
+                    fn($record) =>
+                    $record->user
+                        ? view('components.user-avatar', ['user' => $record->user])
+                        : ''
+                ),
 
             Tables\Columns\TextColumn::make('created_at')
                 ->label(__('Commented at'))
-                ->dateTime()
+                ->dateTime(),
         ];
     }
 
@@ -107,7 +116,7 @@ class LatestComments extends BaseWidget
                 ])
                 ->action(
                     fn($record) =>
-                        redirect()->to(route('filament.resources.tickets.share', $record->ticket->code))
+                    redirect()->to(route('filament.resources.tickets.share', $record->ticket->code))
                 )
         ];
     }
